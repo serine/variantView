@@ -1,0 +1,263 @@
+<!--
+ How to Run Locally:
+ 1) Run the following command in the same directory as this file:
+ python -m SimpleHTTPServer 8888 &
+ 2) Point your browser at the following address:
+ http://localhost:8888/VariantView.html
+ 3) Success! (Note that only Safari,Chrome,Opera,and Firefox are supported. IE is not.)
+-->
+
+
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">                
+                <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+                
+                <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+                <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+                <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+                <link rel="stylesheet" href="/resources/demos/style.css" />
+                
+                <title>Variant Visualization</title>
+                <script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
+                
+                <style type="text/css">
+                    #page-container {
+                        width: 1075px;
+                        margin: auto;
+                    }
+                    
+                    #main-nav {
+                        height: 50px;
+                    }
+                    
+                    #sort_buttons {
+                        height: 60px;
+                    }
+                    
+                    #gene_selection_list {
+                        float: right;
+                        width: 250px;
+                        height: 700px
+                        overflow:scroll;
+                    }
+                    
+                    #gene_view {
+                        margin-right: 250px;
+                        height: 700px;
+                        width: 800px;
+                    }
+                    
+                    #variant_table_view {
+                        height: 300px;
+                    }
+                    
+                    div.scroll
+                    {
+                        background-color:#ffffff;
+                        width:250px;
+                        height:700px;
+                        overflow:scroll;
+                    }
+                    
+                    div.scroll_table
+                    {
+                        background-color:#ffffff;                 
+                        height:300px;
+                        overflow:scroll;
+                    }
+                    
+                    
+                    #sidelists{ 
+                        float: left;
+                        width: 800px;
+                        margin-bottom: 50px;
+                    }
+                    
+                    .layout-slider { 
+                        margin-bottom: 30px; 
+                        width: 50%; 
+                    }
+                    
+                    .file-entry {
+                        margin-bottom: 30px; 
+                        width: 50%; 
+                    }
+                    
+                    line.variant_line_summ{
+                        stroke-width: 1.0;
+                        stroke-opacity: 1.0;
+                        
+                    }
+                    
+                    path.variant_triangle{
+                        stroke-width: 1.0;
+                        stroke-opacity: 1.0;
+                    }
+                    
+                    circle.variant_circle_summ{
+                        stroke-width: 1.5;
+                        stroke: rgb(10,0,190);
+                        fill: rgb(0,10,190);
+                        stroke-opacity: 0.25;
+                        fill-opacity: 0.25;
+                        
+                    }
+                    
+                    circle.awesome{
+                        stroke: rgb(0,0,200);
+                        fill: rgb(0,0,200);
+                    }
+                    
+                    rect.exon_summ{
+                        stroke:#E6550D;
+                        fill:#FDAE6B;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.exon_summ_splices{
+                        stroke: #E6550D;
+                        fill: #E6550D;
+                        shape-rendering: crispEdges;
+                    }
+                              
+                    rect.exon_summ_splices{
+                        stroke: #E6550D;
+                        fill: #E6550D;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.variant_entry{
+                        
+                    }
+                    
+                    rect.variant_text{
+                        
+                    }
+                    
+                    rect.alt_trans{
+                        stroke:#E6550D;
+                        fill:#FDAE6B;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.alt_splices{
+                        stroke: #E6550D;
+                        fill: #E6550D;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.transcript{
+                        stroke: #E6550D;
+                        fill: #E6550D;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.protein{
+                        
+                    }
+                    
+                    text.protein_desc_text{
+                        
+                    }
+                    
+                    rect.exon{
+                        
+                    }
+                    
+                    text.exon_text{
+                        
+                    }
+                    
+                    text.sample_text{
+                        font-family: sans-serif;
+                        font-size: 15px;
+                        fill: #666;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    text.total_num_variants_text{
+                        
+                    }
+                    
+                    text.total_unique_variants_text{
+                        
+                    }
+                    
+                    text.alt_trans_names{
+                        font-family: sans-serif;
+                        font-size: 13px;
+                        fill: #FEB24C;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    text.hq_widget_values{
+                        font-family: sans-serif;
+                        font-size: 15px;
+                        fill: #666;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    text.hq_widget_range{
+                        font-family: sans-serif;
+                        font-size: 13px;
+                        fill: #666;
+                        shape-rendering: crispEdges;
+                    }
+                    
+                    rect.matrix_canvas{
+                        
+                    }
+                    
+                    rect.matrix_mark{
+                        
+                    }
+                    
+                    .brush .extent {
+                        stroke: gray;
+                        fill: blue;
+                        fill-opacity: .165;
+                    }
+                    
+                    
+            </style>
+        </head>
+    
+    <body>
+    <div id="page-container">
+        <div id= "main-nav" class="ui-widget">
+            
+            <div style="float: left; width: 50%">
+                <FORM NAME="myform" ACTION="" METHOD="GET">
+                <label for="tags"> Gene Search: </label>
+                <input id="tags" TYPE="text" NAME="inputbox" VALUE="" />
+                <INPUT TYPE="button" NAME="button" Value="Submit"onClick="showAndClearField(this.form)">
+                </FORM>
+            </div>
+            
+            <div style="float: right; width: 50%">
+                <a href="legend.png" target="_blank">Legend</a>
+            </div>
+             
+        </div>
+           
+    </div>
+    
+    <div id="gene_selection_list" class="scroll"  >
+        <svg id="gene-selection-list" width="250px" height="10000px">
+        </svg>
+    </div>
+    
+    <div id="gene_view" class="scroll">
+        <svg id="compound-visualization" width="10000px" height="1000px">
+        </svg>
+    </div>
+    
+    </body>
+    
+    <script src="VariantView.js"></script>
+</html>
+
+
